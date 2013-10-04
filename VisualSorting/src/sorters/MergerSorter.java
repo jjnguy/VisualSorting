@@ -12,58 +12,33 @@ public class MergerSorter extends Sorter {
 	}
 	
 	private void mergeSort(int start, int end){
+		System.out.println("start: " + start + ", end: " + end);
 		if (end - start <= 1) return;
 		
-		int firstHalf = length() / 2;
+		int firstHalf = (end - start) / 2 + start;
 		
-		mergeSort(0, firstHalf);
+		mergeSort(start, firstHalf);
 		mergeSort(firstHalf, end);
 		
-		merge(0, firstHalf, firstHalf, end);
+		merge(start, firstHalf, firstHalf, end);
 	}
 
 	private void merge(int firstStart, int firstEnd, int secondStart, int secondEnd) {
-		int idxOne = 0;
-		int idxTwo = 0;
+		int idxOne = firstStart;
+		int idxTwo = secondStart;
 
-		int idxCombined = 0;
-
-		if (resultArray.length != one.length + two.length){
-			throw new RuntimeException("Sub array length did not add up to result array length");
-		}
-
-		while (idxOne < one.length && idxTwo < two.length) {
-			if (one[idxOne] < two[idxTwo]) {
-				resultArray[idxCombined++] = one[idxOne++];
-			} else {
-				resultArray[idxCombined++] = two[idxTwo++];
+		while (idxOne < firstEnd && idxTwo < secondEnd) {
+			if (get(idxOne) > get(idxTwo)) {
+				swap(idxOne, idxTwo);
 			}
-			manualRead();
-			manualRead();
-			manualRead();
-			manualWrite();
+			idxOne++;
 			indicateProgress();
 		}
 
 		// now grab the leftovers from the remaining list
 
-		if (idxOne == one.length) {
-			// grab the rest of two
-			for (int i = idxTwo; i < two.length; i++) {
-				resultArray[idxCombined++] = two[idxTwo++];
-				manualRead();
-				manualWrite();
-				indicateProgress();
-			}
-		} else {
-			// grab the rest of one
-			for (int i = idxOne; i < one.length; i++) {
-				resultArray[idxCombined++] = one[idxOne++];
-				manualRead();
-				manualWrite();
-				indicateProgress();
-			}
-		}
+		
+
 	}
 
 	@Override

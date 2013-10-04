@@ -4,6 +4,7 @@ import javax.swing.JPanel;
 import sorter.test.SorterTester;
 import sorters.BubbleSorter;
 import sorters.InsertionSorter;
+import sorters.MergerSorter;
 import sorters.ProgressListener;
 import sorters.QuickSorter;
 import sorters.SlowMergeSorter;
@@ -18,7 +19,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		JFrame frame = new JFrame();
-		Sorter s = new QuickSorter(SorterTester.createRandomArray(500), 1);
+		Sorter s = new MergerSorter(SorterTester.createRandomArray(500), 1);
 		final JPanel arPanel = new ArrayPanel(s);
 		s.addProgressListener(new ProgressListener() {
 			@Override
