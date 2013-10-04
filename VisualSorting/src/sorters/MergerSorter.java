@@ -12,22 +12,23 @@ public class MergerSorter extends Sorter {
 	}
 	
 	private void mergeSort(int start, int end){
-		System.out.println("start: " + start + ", end: " + end);
-		if (end - start <= 1) return;
+		if (end - start < 2) return;
 		
-		int firstHalf = (end - start) / 2 + start;
+		int middle = (end + start) / 2;
 		
-		mergeSort(start, firstHalf);
-		mergeSort(firstHalf, end);
+		mergeSort(start, middle);
+		mergeSort(middle, end);
 		
-		merge(start, firstHalf, firstHalf, end);
+		merge(start, middle, end);
 	}
 
-	private void merge(int firstStart, int firstEnd, int secondStart, int secondEnd) {
+	private void merge(int firstStart, int middle, int secondEnd) {
 		int idxOne = firstStart;
-		int idxTwo = secondStart;
+		int idxTwo = middle;
 
-		while (idxOne < firstEnd && idxTwo < secondEnd) {
+		indicateCurrentIdx(firstStart, secondEnd, middle, idxOne, idxTwo);
+		while (idxOne < secondEnd && idxTwo < secondEnd) {
+			indicateCurrentIdx(firstStart, middle, secondEnd);
 			if (get(idxOne) > get(idxTwo)) {
 				swap(idxOne, idxTwo);
 			}

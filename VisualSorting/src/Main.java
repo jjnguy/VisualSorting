@@ -19,7 +19,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		JFrame frame = new JFrame();
-		Sorter s = new MergerSorter(SorterTester.createRandomArray(500), 1);
+		Sorter s = new MergerSorter(SorterTester.createRandomArray(50), 100);
 		final JPanel arPanel = new ArrayPanel(s);
 		s.addProgressListener(new ProgressListener() {
 			@Override
