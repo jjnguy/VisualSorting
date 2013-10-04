@@ -18,7 +18,7 @@ public class Main {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		JFrame frame = new JFrame();
-		Sorter s = new SlowMergeSorter(SorterTester.createRandomArray(500), 1);
+		Sorter s = new QuickSorter(SorterTester.createRandomArray(500), 1);
 		final JPanel arPanel = new ArrayPanel(s);
 		s.addProgressListener(new ProgressListener() {
 			@Override
