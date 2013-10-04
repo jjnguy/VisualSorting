@@ -1,6 +1,6 @@
 package sorters;
 
-public class QuickSorter extends Sorter {
+public abstract class QuickSorter extends Sorter {
 
 	public QuickSorter(int[] arr, long milis) {
 		super(arr, milis);
@@ -19,10 +19,13 @@ public class QuickSorter extends Sorter {
 		sort(start, pivIdx);
 		sort(pivIdx, end);
 	}
+	
+	protected abstract int pickPivotIndex(int start, int end);
 
 	private int partition(int start, int end) {
-		int partitionValue = get(start);
-		swap(start, end);
+		int partitionIndex = pickPivotIndex(start, end);
+		int partitionValue = get(partitionIndex);
+		swap(partitionIndex, end);
 		int high = end - 1;
 		int low = start;
 		indicateCurrentIdx(low, high);

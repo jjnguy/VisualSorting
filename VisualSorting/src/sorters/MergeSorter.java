@@ -1,6 +1,5 @@
 package sorters;
 
-import java.util.Arrays;
 
 public class MergeSorter extends Sorter {
 
@@ -43,9 +42,6 @@ public class MergeSorter extends Sorter {
 			idxOne++;
 			indicateProgress();
 		}
-
-		// now grab the leftovers from the remaining list
-
 	}
 
 	@Override

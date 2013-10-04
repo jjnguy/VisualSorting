@@ -17,7 +17,7 @@ public class ArrayPanel extends JPanel {
 	public ArrayPanel(Sorter sorter) {
 		super(null);
 		this.sorter = sorter;
-		setPreferredSize(new Dimension(1000, 400));
+		setPreferredSize(new Dimension(1200, 400));
 	}
 
 	@Override
