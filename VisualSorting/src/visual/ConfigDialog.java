@@ -1,6 +1,8 @@
 package visual;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JComboBox;
@@ -18,9 +20,13 @@ public class ConfigDialog extends JDialog {
 	private JLabel arrayLengthValueLAbel, swapCountValueLabel, delayValuelabel;
 	private JSlider arrayLengthSlider, swapCountSlider, delaySlider;
 	private JComboBox<String> arrayTypeCombo;
+	
+	private SortFrame parent;
 
-	public ConfigDialog() {
+	public ConfigDialog(SortFrame parent) {
 		super();
+		this.parent = parent;
+		
 		instantiateComponents();
 		layoutomponents();
 		addActionListeners();
@@ -41,7 +47,7 @@ public class ConfigDialog extends JDialog {
 		swapCountSlider.setPaintTicks(true);
 		swapCountSlider.setMajorTickSpacing(50);
 
-		delaySlider = new JSlider(0, 50, 5);
+		delaySlider = new JSlider(0, 50, 1);
 		delaySlider.setPaintTicks(true);
 		delaySlider.setMajorTickSpacing(2);
 
@@ -84,8 +90,18 @@ public class ConfigDialog extends JDialog {
 
 	private final void addActionListeners() {
 		hookSliderToLabel(arrayLengthSlider, arrayLengthValueLAbel);
+		arrayLengthSlider.addChangeListener(updateParentChangeListener);
 		hookSliderToLabel(delaySlider, delayValuelabel);
+		delaySlider.addChangeListener(updateParentChangeListener);
 		hookSliderToLabel(swapCountSlider, swapCountValueLabel);
+		swapCountSlider.addChangeListener(updateParentChangeListener);
+		
+		arrayTypeCombo.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				parent.resetUsingConfig();
+			}
+		});
 	}
 
 	public int getArrayLenght() {
@@ -103,6 +119,13 @@ public class ConfigDialog extends JDialog {
 	public long getMiliDelay() {
 		return delaySlider.getValue();
 	}
+	
+	private final ChangeListener updateParentChangeListener = new ChangeListener() {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			parent.resetUsingConfig();
+		}
+	};
 
 	private static void hookSliderToLabel(final JSlider slider, final JLabel label) {
 		slider.addChangeListener(new ChangeListener() {

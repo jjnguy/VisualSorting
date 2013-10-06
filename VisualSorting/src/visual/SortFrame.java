@@ -3,15 +3,11 @@ package visual;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.SwingUtilities;
 import javax.swing.SwingWorker;
-import javax.swing.UIManager;
-import javax.swing.UnsupportedLookAndFeelException;
 
 import sorter.test.SorterTester;
 import sorters.BubbleSorter;
@@ -29,18 +25,24 @@ public class SortFrame extends JFrame {
 
 	private Sorter sorter;
 	private ArrayPanel arp;
-	private ConfigDialog confid = new ConfigDialog();
+	private ConfigDialog confid;
+	
+	private  String lastSortTypeSelected = "Merge Sort";
 
 	public SortFrame() {
 		super();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		setUpMenu();
+		
+		confid = new ConfigDialog(this);
+		
 		pack();
 		setVisible(true);
 	}
 
 	public void setSorter(Sorter s) {
+		lastSortTypeSelected = s.sortName();
 		if (arp != null) {
 			remove(arp);
 		}
@@ -74,7 +76,7 @@ public class SortFrame extends JFrame {
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
 				if (sorter.hasRun()) {
-					setSorter(sorter);
+					resetUsingConfig();
 				}
 				goOption.setEnabled(false);
 				SwingWorker<Integer, Void> wurk = new SwingWorker<Integer, Void>() {
@@ -91,23 +93,23 @@ public class SortFrame extends JFrame {
 		JMenu newSortOption = new JMenu("choose sort");
 
 		JMenuItem mergeOption = new JMenuItem("Merge Sort");
-		mergeOption.addActionListener(new AddSortActionListenrer(this, "merge sort", confid));
+		mergeOption.addActionListener(new AddSortActionListenrer(this, "Merge Sort"));
 		newSortOption.add(mergeOption);
 
 		JMenuItem simpQuickOption = new JMenuItem("Simple Quick Sort");
-		simpQuickOption.addActionListener(new AddSortActionListenrer(this, "simple quick sort", confid));
+		simpQuickOption.addActionListener(new AddSortActionListenrer(this, "Simple Quick Sort"));
 		newSortOption.add(simpQuickOption);
 
 		JMenuItem smatQuikOpt = new JMenuItem("Smarter Quick Sort");
-		smatQuikOpt.addActionListener(new AddSortActionListenrer(this, "smarter quick sort", confid));
+		smatQuikOpt.addActionListener(new AddSortActionListenrer(this, "Smarter Quick Sort"));
 		newSortOption.add(smatQuikOpt);
 
 		JMenuItem insertOption = new JMenuItem("Insertion Sort");
-		insertOption.addActionListener(new AddSortActionListenrer(this, "insertion sort", confid));
+		insertOption.addActionListener(new AddSortActionListenrer(this, "Insertion Sort"));
 		newSortOption.add(insertOption);
 
 		JMenuItem bubbleOpt = new JMenuItem("Bubble Sort");
-		bubbleOpt.addActionListener(new AddSortActionListenrer(this, "bubble sort", confid));
+		bubbleOpt.addActionListener(new AddSortActionListenrer(this, "Bubble Sort"));
 		newSortOption.add(bubbleOpt);
 
 		fileMenu.add(newSortOption);
@@ -128,45 +130,51 @@ public class SortFrame extends JFrame {
 
 		setJMenuBar(topMenu);
 	}
+	
+	public void resetUsingConfig(){
+		resetUsingConfig(lastSortTypeSelected);
+	}
+	
+	public void resetUsingConfig(String sortType){
+		int[] arrayToSort = new int[0];
+		String arrayType = confid.getArrayType();
+		// "random", "sorted", "reverse sorted", "semi-sorted"
+		if (arrayType.equals("random")) {
+			arrayToSort = SorterTester.createRandomArray(confid.getArrayLenght());
+		} else if (arrayType.equals("sorted")) {
+			arrayToSort = SorterTester.createSortedArray(confid.getArrayLenght());
+		} else if (arrayType.equals("reverse sorted")) {
+			arrayToSort = SorterTester.createReverseSortedArray(confid.getArrayLenght());
+		} else if (arrayType.equals("semi-sorted")) {
+			arrayToSort = SorterTester.createAlmostSortedArray(confid.getArrayLenght(), confid.getNumberOfSwaps());
+		}
+		if (sortType.equals("Merge Sort")) {
+			setSorter(new MergeSorter(arrayToSort, confid.getMiliDelay()));
+		} else if (sortType.equals("Insertion Sort")) {
+			setSorter(new InsertionSorter(arrayToSort, confid.getMiliDelay()));
+		} else if (sortType.equals("Bubble Sort")) {
+			setSorter(new BubbleSorter(arrayToSort, confid.getMiliDelay()));
+		} else if (sortType.equals("Simple Quick Sort")) {
+			setSorter(new SimpleQuickSorter(arrayToSort, confid.getMiliDelay()));
+		} else if (sortType.equals("Smarter Quick Sort")) {
+			setSorter(new SmarterQuickSorter(arrayToSort, confid.getMiliDelay()));
+		} else {
+			throw new RuntimeException("Did not understand sort type: " + sortType);
+		}
+	}
 
 	private static class AddSortActionListenrer implements ActionListener {
 		SortFrame parent;
 		String sortType;
-		ConfigDialog config;
 
-		public AddSortActionListenrer(SortFrame parent, String sortType, ConfigDialog config) {
+		public AddSortActionListenrer(SortFrame parent, String sortType) {
 			this.parent = parent;
 			this.sortType = sortType;
-			this.config = config;
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			int[] arrayToSort = new int[0];
-			String arrayType = config.getArrayType();
-			// "random", "sorted", "reverse sorted", "semi-sorted"
-			if (arrayType.equals("random")) {
-				arrayToSort = SorterTester.createRandomArray(config.getArrayLenght());
-			} else if (arrayType.equals("sorted")) {
-				arrayToSort = SorterTester.createSortedArray(config.getArrayLenght());
-			} else if (arrayType.equals("reverse sorted")) {
-				arrayToSort = SorterTester.createReverseSortedArray(config.getArrayLenght());
-			} else if (arrayType.equals("semi-sorted")) {
-				arrayToSort = SorterTester.createAlmostSortedArray(config.getArrayLenght(), config.getNumberOfSwaps());
-			}
-			if (sortType.equals("merge sort")) {
-				parent.setSorter(new MergeSorter(arrayToSort, config.getMiliDelay()));
-			} else if (sortType.equals("insertion sort")) {
-				parent.setSorter(new InsertionSorter(arrayToSort, config.getMiliDelay()));
-			} else if (sortType.equals("bubble sort")) {
-				parent.setSorter(new BubbleSorter(arrayToSort, config.getMiliDelay()));
-			} else if (sortType.equals("simple quick sort")) {
-				parent.setSorter(new SimpleQuickSorter(arrayToSort, config.getMiliDelay()));
-			} else if (sortType.equals("smarter quick sort")) {
-				parent.setSorter(new SmarterQuickSorter(arrayToSort, config.getMiliDelay()));
-			} else {
-				throw new RuntimeException("Did not understand sort type: " + sortType);
-			}
+			parent.resetUsingConfig(sortType);
 		}
 	}
 }
