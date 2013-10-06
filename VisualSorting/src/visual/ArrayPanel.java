@@ -32,12 +32,6 @@ public class ArrayPanel extends JPanel {
 		Graphics2D g2 = (Graphics2D) g;
 		int itemWidth = getWidth() / sorter.length();
 		
-		g2.setColor(Color.BLACK);
-		g2.drawString("Name: " + sorter.sortName(), 5, 20);
-		g2.drawString("Time: " + sorter.time(), 5, 40);
-		g2.drawString("Reads: " + sorter.readCount(), 5, 60);
-		g2.drawString("Writes: " + sorter.writeCount(), 5, 80);
-		
 		g2.setColor(Color.RED);
 		for (int i = 0; i < sorter.length(); i++) {
 			if (arrayContains(sorter.currentIdexOperatedOn(), i)) {
@@ -47,6 +41,12 @@ public class ArrayPanel extends JPanel {
 					(int) -(getHeight() *scale * sorter.get(i)));
 			g2.setColor(Color.RED);
 		}
+		
+		g2.setColor(Color.BLACK);
+		g2.drawString("Name: " + sorter.sortName(), 5, 20);
+		g2.drawString("Time: " + sorter.time(), 5, 40);
+		g2.drawString("Reads: " + sorter.readCount(), 5, 60);
+		g2.drawString("Writes: " + sorter.writeCount(), 5, 80);
 	}
 	
 	private static boolean arrayContains(int[] arr, int search){

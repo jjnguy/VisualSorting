@@ -25,8 +25,8 @@ public class Main {
 	 */
 	public static void main(String[] args) throws InterruptedException {
 		Sorter s = new SmarterQuickSorter(SorterTester.createAlmostSortedArray(1200, 10), 1);
-		final SortFrame frame = new SortFrame(s);
-
+		final SortFrame frame = new SortFrame();
+		// frame.addSorter(s);
 		//s.sort();
 		//System.out.println("Time: " + s.time());
 		

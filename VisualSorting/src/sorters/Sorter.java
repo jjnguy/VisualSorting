@@ -14,7 +14,8 @@ public abstract class Sorter {
 	private boolean isRunning = false;
 	private long startTime = 0;
 
-	private List<ProgressListener> listeners = new ArrayList<>();
+	private List<ProgressListener> progressListeners = new ArrayList<>();
+	private List<CompleteListener> completeListeners = new ArrayList<>();
 
 	public Sorter(int[] arr, long milisecondDelay) {
 		this.arr = arr;
@@ -22,11 +23,15 @@ public abstract class Sorter {
 	}
 
 	public void addProgressListener(ProgressListener pl) {
-		listeners.add(pl);
+		progressListeners.add(pl);
+	}
+
+	public void addCompleteListener(CompleteListener cl) {
+		completeListeners.add(cl);
 	}
 
 	private void alertListeners() {
-		for (ProgressListener lsitener : listeners) {
+		for (ProgressListener lsitener : progressListeners) {
 			lsitener.stepPerformed();
 		}
 	}
@@ -36,7 +41,6 @@ public abstract class Sorter {
 		try {
 			Thread.sleep(miliDelay);
 		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -51,6 +55,9 @@ public abstract class Sorter {
 		totalMilis = end - startTime;
 		ran = true;
 		isRunning = false;
+		for (CompleteListener cl : completeListeners) {
+			cl.complete();
+		}
 	}
 
 	public long time() {
@@ -121,8 +128,8 @@ public abstract class Sorter {
 	public long readCount() {
 		return readCount;
 	}
-	
-	public long getDelay(){
+
+	public long getDelay() {
 		return miliDelay;
 	}
 
