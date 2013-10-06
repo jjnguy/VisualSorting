@@ -10,4 +10,9 @@ public class SimpleQuickSorter extends QuickSorter {
 	protected int pickPivotIndex(int start, int end) {
 		return start;
 	}
+
+	@Override
+	public String sortName() {
+		return "Simple Quick Sort";
+	}
 }

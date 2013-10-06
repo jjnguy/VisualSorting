@@ -11,25 +11,27 @@ public abstract class Sorter {
 	private boolean ran = false;
 	private long totalMilis = 0;
 	private long miliDelay;
-	
+	private boolean isRunning = false;
+	private long startTime = 0;
+
 	private List<ProgressListener> listeners = new ArrayList<>();
 
 	public Sorter(int[] arr, long milisecondDelay) {
 		this.arr = arr;
 		this.miliDelay = milisecondDelay;
 	}
-	
-	public void addProgressListener(ProgressListener pl){
+
+	public void addProgressListener(ProgressListener pl) {
 		listeners.add(pl);
 	}
-	
-	private void alertListeners(){
+
+	private void alertListeners() {
 		for (ProgressListener lsitener : listeners) {
 			lsitener.stepPerformed();
 		}
 	}
-	
-	protected void indicateProgress(){
+
+	protected void indicateProgress() {
 		alertListeners();
 		try {
 			Thread.sleep(miliDelay);
@@ -42,17 +44,20 @@ public abstract class Sorter {
 	public void sort() {
 		if (ran)
 			return;
-		long start = System.currentTimeMillis();
+		isRunning = true;
+		startTime = System.currentTimeMillis();
 		sortInternal();
 		long end = System.currentTimeMillis();
-		totalMilis = end - start;
+		totalMilis = end - startTime;
 		ran = true;
+		isRunning = false;
 	}
 
 	public long time() {
+		if (!hasRun() && !isRunning)
+			return 0;
 		if (!hasRun())
-			throw new RuntimeException(
-					"Cannot get time of sorter that has not yet been ran");
+			return System.currentTimeMillis() - startTime;
 		return totalMilis;
 	}
 
@@ -71,46 +76,54 @@ public abstract class Sorter {
 		readCount += 2;
 		writeCount += 2;
 	}
-	
+
 	private int[] curIdx = new int[0];
 
-	public int[] currentIdexOperatedOn(){
+	public int[] currentIdexOperatedOn() {
 		return curIdx;
 	}
-	
-	protected void indicateCurrentIdx(int... idx){
+
+	protected void indicateCurrentIdx(int... idx) {
 		curIdx = idx;
 		alertListeners();
 	}
-	
+
 	public int length() {
 		return arr.length;
 	}
 
 	public int get(int idx) {
-		readCount++;
+		if (isRunning)
+			readCount++;
 		return arr[idx];
 	}
 
 	protected void set(int idx, int val) {
-		writeCount++;
+		if (isRunning)
+			writeCount++;
 		arr[idx] = val;
 	}
 
-	protected void manualRead(){
-		readCount++;
+	protected void manualRead() {
+		if (isRunning)
+			readCount++;
 	}
-	
-	protected void manualWrite(){
-		writeCount++;
+
+	protected void manualWrite() {
+		if (isRunning)
+			writeCount++;
 	}
-	
+
 	public long writeCount() {
 		return writeCount;
 	}
 
 	public long readCount() {
 		return readCount;
+	}
+	
+	public long getDelay(){
+		return miliDelay;
 	}
 
 	protected int[] ifYouMustAbsolutelyHaveAccessToTheUnderlyingArrayUseThisMethodButPleaseDontIfYouReallyDontHaveToKThxBye() {

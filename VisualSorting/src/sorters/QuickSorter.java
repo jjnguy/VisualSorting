@@ -43,9 +43,4 @@ public abstract class QuickSorter extends Sorter {
 		}
 		return (low);
 	}
-
-	@Override
-	public String sortName() {
-		return "Quick Sort";
-	}
 }
