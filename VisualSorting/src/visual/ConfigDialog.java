@@ -16,17 +16,17 @@ import javax.swing.event.ChangeListener;
 
 public class ConfigDialog extends JDialog {
 
-	private JLabel arrayLengthLabel, arrayTypeLabel, swapCountLabel, delayLabel;
-	private JLabel arrayLengthValueLAbel, swapCountValueLabel, delayValuelabel;
-	private JSlider arrayLengthSlider, swapCountSlider, delaySlider;
+	private JLabel arrayLengthLabel, arrayTypeLabel, swapCountLabel, delayLabel, maxValueLabel;
+	private JLabel arrayLengthValueLAbel, swapCountValueLabel, delayValuelabel, maxValueValueLabel;
+	private JSlider arrayLengthSlider, swapCountSlider, delaySlider, maxValueSlider;
 	private JComboBox<String> arrayTypeCombo;
-	
+
 	private SortFrame parent;
 
 	public ConfigDialog(SortFrame parent) {
 		super();
 		this.parent = parent;
-		
+
 		instantiateComponents();
 		layoutomponents();
 		addActionListeners();
@@ -37,7 +37,9 @@ public class ConfigDialog extends JDialog {
 		arrayLengthLabel = new JLabel("array length");
 		arrayTypeLabel = new JLabel("array type");
 		swapCountLabel = new JLabel("swap count");
+		swapCountLabel.setVisible(false);
 		delayLabel = new JLabel("miliseconds to delay");
+		maxValueLabel = new JLabel("max random value");
 
 		arrayLengthSlider = new JSlider(200, 1500, 1000);
 		arrayLengthSlider.setPaintTicks(true);
@@ -46,16 +48,21 @@ public class ConfigDialog extends JDialog {
 		swapCountSlider = new JSlider(0, arrayLengthSlider.getValue() / 2, arrayLengthSlider.getValue() / 4);
 		swapCountSlider.setPaintTicks(true);
 		swapCountSlider.setMajorTickSpacing(50);
+		swapCountSlider.setVisible(false);
 
 		delaySlider = new JSlider(0, 50, 1);
 		delaySlider.setPaintTicks(true);
 		delaySlider.setMajorTickSpacing(2);
 
+		maxValueSlider = new JSlider(5, 200, 100);
+
 		arrayTypeCombo = new JComboBox<>(new String[] { "random", "sorted", "reverse sorted", "semi-sorted" });
 
 		arrayLengthValueLAbel = new JLabel("" + arrayLengthSlider.getValue());
 		swapCountValueLabel = new JLabel("" + swapCountSlider.getValue());
+		swapCountValueLabel.setVisible(false);
 		delayValuelabel = new JLabel("" + delaySlider.getValue());
+		maxValueValueLabel = new JLabel("" + maxValueSlider.getValue());
 	}
 
 	private final void layoutomponents() {
@@ -79,6 +86,12 @@ public class ConfigDialog extends JDialog {
 		p3.add(swapCountValueLabel);
 		parent.add(p3);
 
+		JPanel p5 = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		p5.add(maxValueLabel);
+		p5.add(maxValueSlider);
+		p5.add(maxValueValueLabel);
+		parent.add(p5);
+
 		JPanel p4 = new JPanel(new FlowLayout(FlowLayout.LEFT));
 		p4.add(delayLabel);
 		p4.add(delaySlider);
@@ -95,11 +108,32 @@ public class ConfigDialog extends JDialog {
 		delaySlider.addChangeListener(updateParentChangeListener);
 		hookSliderToLabel(swapCountSlider, swapCountValueLabel);
 		swapCountSlider.addChangeListener(updateParentChangeListener);
-		
+		hookSliderToLabel(maxValueSlider, maxValueValueLabel);
+		maxValueSlider.addChangeListener(updateParentChangeListener);
+
 		arrayTypeCombo.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				parent.resetUsingConfig();
+
+				if (arrayTypeCombo.getSelectedItem().toString().equals("random")) {
+					maxValueLabel.setVisible(true);
+					maxValueSlider.setVisible(true);
+					maxValueValueLabel.setVisible(true);
+				} else {
+					maxValueLabel.setVisible(false);
+					maxValueSlider.setVisible(false);
+					maxValueValueLabel.setVisible(false);
+				}
+				if (arrayTypeCombo.getSelectedItem().toString().equals("semi-sorted")) {
+					swapCountLabel.setVisible(true);
+					swapCountSlider.setVisible(true);
+					swapCountValueLabel.setVisible(true);
+				} else {
+					swapCountLabel.setVisible(false);
+					swapCountSlider.setVisible(false);
+					swapCountValueLabel.setVisible(false);
+				}
 			}
 		});
 	}
@@ -119,7 +153,11 @@ public class ConfigDialog extends JDialog {
 	public long getMiliDelay() {
 		return delaySlider.getValue();
 	}
-	
+
+	public int getMaxRandomValue() {
+		return maxValueSlider.getValue();
+	}
+
 	private final ChangeListener updateParentChangeListener = new ChangeListener() {
 		@Override
 		public void stateChanged(ChangeEvent e) {

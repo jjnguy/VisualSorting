@@ -25,16 +25,16 @@ public abstract class SorterTester {
 	}
 
 	public void test() throws InterruptedException {
-		int[] ex = createRandomArray(50);
+		int[] ex = createRandomArray(50, 100);
 
 		test(ex);
 	}
 
-	public static int[] createRandomArray(int length) {
+	public static int[] createRandomArray(int length, int maxValue) {
 		int[] result = new int[length];
 
 		for (int i = 0; i < result.length; i++) {
-			result[i] = r.nextInt(100);
+			result[i] = r.nextInt(maxValue);
 		}
 
 		return result;

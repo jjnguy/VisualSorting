@@ -140,7 +140,7 @@ public class SortFrame extends JFrame {
 		String arrayType = confid.getArrayType();
 		// "random", "sorted", "reverse sorted", "semi-sorted"
 		if (arrayType.equals("random")) {
-			arrayToSort = SorterTester.createRandomArray(confid.getArrayLenght());
+			arrayToSort = SorterTester.createRandomArray(confid.getArrayLenght(), confid.getMaxRandomValue());
 		} else if (arrayType.equals("sorted")) {
 			arrayToSort = SorterTester.createSortedArray(confid.getArrayLenght());
 		} else if (arrayType.equals("reverse sorted")) {
