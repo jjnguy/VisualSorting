@@ -1,5 +1,7 @@
 
 var ArrayVisualizer = function(sorter, canvas){
+	// stole some ideas for drawing from the following:
+	// http://joshuakehn.com/blog/static/sort.html
 	var self = this;
 	var ctx = canvas.getContext( '2d' );
 	

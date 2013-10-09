@@ -55,28 +55,28 @@ function insertionSort(arr, indicateProgress, setCurrentIndexes){
 }
 var qSorter = {
 	sort : function (arr, indicateProgress, setCurrentIndexes){
-		sortInternal(0, arr.length, arr, indicateProgress, setCurrentIndexes);
+		qSorter.sortInternal(0, arr.length, arr, indicateProgress, setCurrentIndexes);
 	},
 	sortInternal : function(start, end, arr, indicateProgress, setCurrentIndexes){
 		if (Math.abs(start - end) <= 1) {
 			return;
 		}
-		int pivIdx = partition(start, end - 1, arr, indicateProgress, setCurrentIndexes);
+		var pivIdx = qSorter.partition(start, end - 1, arr, indicateProgress, setCurrentIndexes);
 		qSorter.sortInternal(start, pivIdx, arr, indicateProgress, setCurrentIndexes);
 		qSorter.sortInternal(pivIdx, end, arr, indicateProgress, setCurrentIndexes);
 	},
 	partition : function(start, end, arr, indicateProgress, setCurrentIndexes) {
-		var partitionIndex = pickPivotIndex(start, end);
+		var partitionIndex = qSorter.pickPivotIndex(start, end);
 		var partitionValue = arr[partitionIndex];
-		swap(partitionIndex, end);
+		qSorter.swap(arr, partitionIndex, end);
 		var high = end - 1;
 		var low = start;
 		setCurrentIndexes(low, high);
 		while (low <= high) {
-			if (get(low) > partitionValue) {
-				swap(low, high--);
-			} else if (get(high) < partitionValue) {
-				swap(low++, high);
+			if (arr[low] > partitionValue) {
+				qSorter.swap(arr, low, high--);
+			} else if (arr[high] < partitionValue) {
+				qSorter.swap(arr, low++, high);
 			} else {
 				low++;
 				high--;
@@ -88,5 +88,10 @@ var qSorter = {
 	},
 	pickPivotIndex : function(start, end) {
 		return start;
+	},
+	swap : function(arr, i, j){
+		var temp = arr[i];
+		arr[i] = arr[j];
+		arr[j] = temp;
 	}
 }
