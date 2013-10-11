@@ -51,7 +51,7 @@
 			} else if (dataType == 'reversed') {
 				data = dataGen.reversed(length);
 			} else if (dataType == 'semi-sorted'){
-				data = dataGen.almostSortedClose(length, length / 10, 10);
+				data = dataGen.almostSortedClose(length, length / 5, 20);
 			}
 			
 			sorter = new Sorter(data, sort);

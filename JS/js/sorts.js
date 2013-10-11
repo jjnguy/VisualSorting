@@ -40,13 +40,16 @@ var Sorter = function(arr, sortFunction){
 };
 
 function bubbleSort(arr, indicateProgress, setCurrentIndexes){
+	var swappedIdx = arr.length;
 	var swapped = false;
 	do {
+		var swapIdxThisIteration = swappedIdx;
 		swapped = false;
-		for (var i = 0; i < arr.length - 1; i++) {
+		for (var i = 0; i < swapIdxThisIteration - 1; i++) {
 			setCurrentIndexes(i, i+1);
 			if (arr[i] > arr[i + 1]) {
 				swap(arr, i, i + 1);
+				swappedIdx = i + 1;
 				swapped = true;
 			}
 			indicateProgress();
