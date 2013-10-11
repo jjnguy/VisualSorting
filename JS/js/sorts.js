@@ -39,6 +39,21 @@ var Sorter = function(arr, sortFunction){
 	
 };
 
+function bubbleSort(arr, indicateProgress, setCurrentIndexes){
+	var swapped = false;
+	do {
+		swapped = false;
+		for (var i = 0; i < arr.length - 1; i++) {
+			setCurrentIndexes(i, i+1);
+			if (arr[i] > arr[i + 1]) {
+				swap(arr, i, i + 1);
+				swapped = true;
+			}
+			indicateProgress();
+		}
+	} while (swapped);
+}
+
 function insertionSort(arr, indicateProgress, setCurrentIndexes){
 	for (var i = 1; i < arr.length; i++) {
 		setCurrentIndexes(i);
@@ -54,29 +69,32 @@ function insertionSort(arr, indicateProgress, setCurrentIndexes){
 	}
 }
 var qSorter = {
-	sort : function (arr, indicateProgress, setCurrentIndexes){
-		qSorter.sortInternal(0, arr.length, arr, indicateProgress, setCurrentIndexes);
+	sortSmart : function (arr, indicateProgress, setCurrentIndexes){
+		qSorter.sortInternal(0, arr.length, arr, indicateProgress, setCurrentIndexes, qSorter.pickPivotIndexSmart);
 	},
-	sortInternal : function(start, end, arr, indicateProgress, setCurrentIndexes){
+	sortDumb : function (arr, indicateProgress, setCurrentIndexes){
+		qSorter.sortInternal(0, arr.length, arr, indicateProgress, setCurrentIndexes, qSorter.pickPivotIndexDumb);
+	},
+	sortInternal : function(start, end, arr, indicateProgress, setCurrentIndexes, pivotStrategy){
 		if (Math.abs(start - end) <= 1) {
 			return;
 		}
-		var pivIdx = qSorter.partition(start, end - 1, arr, indicateProgress, setCurrentIndexes);
-		qSorter.sortInternal(start, pivIdx, arr, indicateProgress, setCurrentIndexes);
-		qSorter.sortInternal(pivIdx, end, arr, indicateProgress, setCurrentIndexes);
+		var pivIdx = qSorter.partition(start, end - 1, arr, indicateProgress, setCurrentIndexes, pivotStrategy);
+		qSorter.sortInternal(start, pivIdx, arr, indicateProgress, setCurrentIndexes, pivotStrategy);
+		qSorter.sortInternal(pivIdx, end, arr, indicateProgress, setCurrentIndexes, pivotStrategy);
 	},
-	partition : function(start, end, arr, indicateProgress, setCurrentIndexes) {
-		var partitionIndex = qSorter.pickPivotIndex(start, end);
+	partition : function(start, end, arr, indicateProgress, setCurrentIndexes, pivotStrategy) {
+		var partitionIndex = pivotStrategy(start, end, arr);
 		var partitionValue = arr[partitionIndex];
-		qSorter.swap(arr, partitionIndex, end);
+		swap(arr, partitionIndex, end);
 		var high = end - 1;
 		var low = start;
 		setCurrentIndexes(low, high);
 		while (low <= high) {
 			if (arr[low] > partitionValue) {
-				qSorter.swap(arr, low, high--);
+				swap(arr, low, high--);
 			} else if (arr[high] < partitionValue) {
-				qSorter.swap(arr, low++, high);
+				swap(arr, low++, high);
 			} else {
 				low++;
 				high--;
@@ -86,12 +104,79 @@ var qSorter = {
 		}
 		return (low);
 	},
-	pickPivotIndex : function(start, end) {
+	pickPivotIndexDumb : function(start, end, arr) {
 		return start;
 	},
-	swap : function(arr, i, j){
-		var temp = arr[i];
-		arr[i] = arr[j];
-		arr[j] = temp;
+	pickPivotIndexSmart : function(start, end, arr){
+		if (start - end > 2) {
+			var middle = arr[intDiv(start + end, 2)];
+			var first = arr[start];
+			var last = arr[end - 1];
+
+			if (first > middle) {
+				if (middle > last) {
+					return middle;
+				} else if (first > last) {
+					return last;
+				} else {
+					return first;
+				}
+			} else {
+				if (first > last) {
+					return first;
+				} else if (middle > last) {
+					return last;
+				} else {
+					return middle;
+				}
+			}
+		}
+		return intDiv(start + end, 2);
 	}
+}
+
+var mergeSorter = {
+	sort : function(arr, indicateProgress, setCurrentIndexes){
+		mergeSorter.sortInternal(0, arr.length, arr, indicateProgress, setCurrentIndexes);
+	},
+	sortInternal : function(start, end, arr, indicateProgress, setCurrentIndexes){
+		if (end - start < 2)
+			return;
+
+		var middle = intDiv(end + start, 2);
+
+		mergeSorter.sortInternal(start, middle, arr, indicateProgress, setCurrentIndexes);
+		mergeSorter.sortInternal(middle, end, arr, indicateProgress, setCurrentIndexes);
+
+		mergeSorter.merge(start, middle, end, arr, indicateProgress, setCurrentIndexes);
+	},
+	merge : function(firstStart, middle, secondEnd, arr, indicateProgress, setCurrentIndexes){
+		var idxOne = firstStart;
+
+		setCurrentIndexes(firstStart, secondEnd, middle, idxOne);
+		while (idxOne < middle && middle < secondEnd) {
+			setCurrentIndexes(firstStart, middle, secondEnd, idxOne);
+			if (arr[idxOne] > arr[middle]) {
+				// move two in front of one, and shift the rest back
+				var tempVal = arr[middle];
+				for (var i = middle; i > idxOne; i--) {
+					arr[i] = arr[i-1];
+				}
+				arr[idxOne] = tempVal;
+				middle++;
+			}
+			idxOne++;
+			indicateProgress();
+		}
+	}
+}
+
+function intDiv(i, j){
+	return Math.floor(i / j);
+}
+
+function swap(arr, i, j){
+	var temp = arr[i];
+	arr[i] = arr[j];
+	arr[j] = temp;
 }
