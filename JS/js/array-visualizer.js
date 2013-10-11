@@ -18,6 +18,8 @@ var ArrayVisualizer = function(sorter, canvas){
 		var data = arraysToPaint.shift();
 		var arr = data.arr;
 		var indexess = data.indexes;
+		var maxVal = max(arr);
+		var scale = canvas.height / maxVal;
 		canvas.width = canvas.width;
 		for(var i = 0; i < arr.length; i++){
 			var itemWidth = canvas.width / arr.length;
@@ -26,7 +28,7 @@ var ArrayVisualizer = function(sorter, canvas){
 			if (arrayContains(indexess, i)) {
 				ctx.fillStyle = 'green';
 			}
-			ctx.fillRect(itemWidth * i, canvas.height, itemWidth, -(canvas.height * .1 * arr[i]));
+			ctx.fillRect(itemWidth * i, canvas.height, itemWidth, -(scale * arr[i]));
 		}
 		ctx.fillStyle = 'black';
 
@@ -45,6 +47,14 @@ var ArrayVisualizer = function(sorter, canvas){
 		return false;
 	}
 	
-	var FPS = 60;
+	function max(arr){
+		var max = -101010;
+		for(var i = 0; i < arr.length; i++){
+			if (arr[i] > max) max = arr[i];
+		}
+		return max;
+	}
+	
+	var FPS = 60 * 20;
 	setInterval(self.paint, 1000 / FPS);
 }
