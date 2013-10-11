@@ -51,7 +51,7 @@
 			} else if (dataType == 'reversed') {
 				data = dataGen.reversed(length);
 			} else if (dataType == 'semi-sorted'){
-				data = dataGen.almostSorted(length, length / 10);
+				data = dataGen.almostSortedClose(length, length / 10, 10);
 			}
 			
 			sorter = new Sorter(data, sort);
@@ -67,12 +67,15 @@
 		var sorter;
 		$(function(){
 			$('#sort-type, #data-type, #length').on('change', function(){
+				visual.clear();
 				collectSettings();
 			});
 			
 			$('#go').on('click', function(){
 				visual.clear();
-				collectSettings();
+				//if (!sorter){ 
+					collectSettings();
+				//}
 				sorter.sort();
 			});
 			
