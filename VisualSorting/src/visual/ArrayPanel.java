@@ -40,7 +40,7 @@ public class ArrayPanel extends JPanel {
 			if (arrayContains(sorter.currentIdexOperatedOn(), i)) {
 				g2.setColor(Color.GREEN);
 			}
-			g2.fillRect(itemWidth * i, getHeight(), itemWidth, (int) -(getHeight() * scale * sorter.get(i)));
+			g2.fillRect(itemWidth * i, getHeight(), itemWidth, (int) -(getHeight() * scale * sorter.get(i, true)));
 			g2.setColor(Color.RED);
 		}
 

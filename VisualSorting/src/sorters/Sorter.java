@@ -99,10 +99,14 @@ public abstract class Sorter {
 		return arr.length;
 	}
 
-	public int get(int idx) {
-		if (isRunning)
+	public int get(int idx, boolean skipCount) {
+		if (isRunning && !skipCount)
 			readCount++;
 		return arr[idx];
+	}
+	
+	public int get(int idx) {
+		return get(idx, false);
 	}
 
 	protected void set(int idx, int val) {

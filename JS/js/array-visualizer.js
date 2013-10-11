@@ -1,5 +1,5 @@
 
-var ArrayVisualizer = function(sorter, canvas){
+var ArrayVisualizer = function(canvas){
 	// stole some ideas for drawing from the following:
 	// http://joshuakehn.com/blog/static/sort.html
 	var self = this;
@@ -28,14 +28,13 @@ var ArrayVisualizer = function(sorter, canvas){
 			if (arrayContains(indexess, i)) {
 				ctx.fillStyle = 'green';
 			}
-			ctx.fillRect(itemWidth * i, canvas.height, itemWidth, -(scale * arr[i]));
+			ctx.fillRect(itemWidth * i, canvas.height, itemWidth, Math.floor(-(scale * arr[i])));
 		}
 		ctx.fillStyle = 'black';
-
-		//g2.drawString("Name: " + sorter.sortName(), 5, 20);
-		//g2.drawString("Time: " + sorter.time(), 5, 40);
-		//g2.drawString("Reads: " + sorter.readCount(), 5, 60);
-		//g2.drawString("Writes: " + sorter.writeCount(), 5, 80);
+	};
+	
+	self.clear = function(){
+		arraysToPaint = [];
 	};
 	
 	function arrayContains(arr, search) {

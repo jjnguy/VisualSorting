@@ -1,20 +1,84 @@
 <html>
 <head></head>
 <body>
-	<button id="go" onclick="sorter.sort()">sort</button>
-	<canvas id="canvas"></canvas>
+	<select id="sort-type">
+		<option>bubble</option>
+		<option>insertion</option>
+		<option selected>merge</option>
+		<option>quick (stupid)</option>
+		<option>quick (smarter)</option>
+	</select>
+	<select id="data-type">
+		<option selected>random</option>
+		<option>sorted</option>
+		<option>reversed</option>
+		<option>semi-sorted</option>
+	</select>
+	<select id="length">
+		<option>50</option>
+		<option>100</option>
+		<option>200</option>
+		<option>400</option>
+		<option selected>1000</option>
+	</select>
+	<button id="go">sort</button>
+	<canvas id="canvas" height="500" width="1000"></canvas>
+	<script src="http://code.jquery.com/jquery-2.0.2.js"></script>
 	<script src="js/sorts.js"></script>
 	<script src="js/array-visualizer.js"></script>
 	<script src="js/data-generation.js"></script>
 	<script>
+		function collectSettings(){
+			var sort, data;
+			var sortType = $('#sort-type option:selected').text();
+			var dataType = $('#data-type option:selected').text();
+			var length = parseInt($('#length option:selected').text());
+			if (sortType == 'bubble') {
+				sort = bubbleSort;
+			}else if (sortType == 'insertion'){
+				sort = insertionSort;
+			} else if (sortType == 'merge'){
+				sort = mergeSorter.sort;
+			} else if (sortType == 'quick (stupid)') {
+				sort = qSorter.sortDumb;
+			} else if (sortType == 'quick (smarter)') {
+				sort = qSorter.sortSmart;
+			}
+			if (dataType == 'random') {
+				data = dataGen.random(length, length);
+			} else if (dataType == 'sorted') {
+				data = dataGen.sorted(length);
+			} else if (dataType == 'reversed') {
+				data = dataGen.reversed(length);
+			} else if (dataType == 'semi-sorted'){
+				data = dataGen.almostSorted(length, length / 10);
+			}
+			
+			sorter = new Sorter(data, sort);
+			
+			sorter.addProgressCallback(function(data){
+				visual.addFrame(data);
+			});
+			visual.addFrame({arr: data, indexes:[]});
+		}
+	
 		var dataGen = new DataGenerator();
-		var arr = dataGen.almostSortedClose(100, 100, 20);
-		var sorter = new Sorter(arr, mergeSorter.sort);
-		var visual = new ArrayVisualizer(sorter, document.getElementById('canvas'));
-		sorter.addProgressCallback(function(data){
-			visual.addFrame(data);
+		var visual = new ArrayVisualizer(document.getElementById('canvas'));
+		var sorter;
+		$(function(){
+			$('#sort-type, #data-type, #length').on('change', function(){
+				collectSettings();
+			});
+			
+			$('#go').on('click', function(){
+				visual.clear();
+				collectSettings();
+				sorter.sort();
+			});
+			
+			collectSettings();
 		});
-		visual.addFrame({arr: arr, indexes:[]});
+		
 	</script>
 </body>
 </html>
