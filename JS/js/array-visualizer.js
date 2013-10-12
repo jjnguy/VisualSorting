@@ -54,6 +54,6 @@ var ArrayVisualizer = function(canvas){
 		return max;
 	}
 	
-	var FPS = 60 * 20;
+	var FPS = 60 * 2;
 	setInterval(self.paint, 1000 / FPS);
 }

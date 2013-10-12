@@ -1,27 +1,37 @@
 <html>
-<head></head>
+<head>
+	<title>Array Sorting Visualizer in Javascript</title>
+</head>
 <body>
-	<select id="sort-type">
-		<option>bubble</option>
-		<option>insertion</option>
-		<option selected>merge</option>
-		<option>quick (stupid)</option>
-		<option>quick (smarter)</option>
-	</select>
-	<select id="data-type">
-		<option selected>random</option>
-		<option>sorted</option>
-		<option>reversed</option>
-		<option>semi-sorted</option>
-	</select>
-	<select id="length">
-		<option>50</option>
-		<option>100</option>
-		<option>200</option>
-		<option>400</option>
-		<option selected>1000</option>
-	</select>
-	<button id="go">sort</button>
+	<h1>Javascript Array Sorting Visualizer</h1>
+	<div>
+		<p>This small page is meant to showcase various popular sorting algorithms and how they perform on different data sets.</p>
+		<p>Simply choose your various options, and click go. You can watch the algorithm work on the data.</p>
+		<p>Some interesting thing to see is how poorly Quicksort performs on sorted or reverse sorted data when the method for picking a pivot is poor. </p>
+	</div>
+	<div>
+		<select id="sort-type">
+			<option>bubble</option>
+			<option>insertion</option>
+			<option selected>merge</option>
+			<option>quick (stupid)</option>
+			<option>quick (smarter)</option>
+		</select>
+		<select id="data-type">
+			<option selected>random</option>
+			<option>sorted</option>
+			<option>reversed</option>
+			<option>semi-sorted</option>
+		</select>
+		<select id="length">
+			<option>50</option>
+			<option>100</option>
+			<option>200</option>
+			<option selected>400</option>
+			<option>1000</option>
+		</select>
+		<button id="go">sort</button>
+	</div>
 	<canvas id="canvas" height="500" width="1000"></canvas>
 	<script src="http://code.jquery.com/jquery-2.0.2.js"></script>
 	<script src="js/sorts.js"></script>
