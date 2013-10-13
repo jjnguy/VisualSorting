@@ -1,48 +1,66 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
 	<title>Array Sorting Visualizer in Javascript</title>
+	<link rel="stylesheet" type="text/css" href="bootstrap/less/bootstrap.css" />
+	<link rel="stylesheet" type="text/css" href="bootstrap-select/bootstrap-select.css" />
 </head>
 <body>
-	<h1>Javascript Array Sorting Visualizer</h1>
-	<div>
-		<p>This small page is meant to showcase various popular sorting algorithms and how they perform on different data sets.</p>
-		<p>Simply choose your various options, and click go. You can watch the algorithm work on the data.</p>
-		<p>Some interesting thing to see is how poorly Quicksort performs on sorted or reverse sorted data when the method for picking a pivot is poor. </p>
+	<div class="container">
+		<h1>Javascript Array Sorting Visualizer</h1>
+		<div>
+			<p>This small page is meant to showcase various popular sorting algorithms and how they perform on different data sets.</p>
+			<p>Simply choose your various options, and click go. You can watch the algorithm work on the data.</p>
+			<p>
+				The following are some interesting scenarios to look at:
+				<ul>
+					<li>
+						<span>Quicksort with a naïve pivot selection algorithm performs poorly on <a id="qsort-stupid-sorted">sorted</a> or semi-sorted or reverse-sorted data. 
+						(Versus a smarter partition: sorted, semi-sorted, reverse-sorted)</span>
+					</li>
+					<li>
+						<span>Insertion sort performs well on semi-sorted data. (Versus: Quick sort, or Merge Sort)</span>
+					</li>
+				</ul>
+			</p>
+		</div>
+		<div>
+			<select id="sort-type" class="selectpicker">
+				<option>bubble</option>
+				<option>insertion</option>
+				<option selected>merge</option>
+				<option>quick (stupid)</option>
+				<option>quick (smarter)</option>
+			</select>
+			<select id="data-type" class="selectpicker">
+				<option selected>random</option>
+				<option>sorted</option>
+				<option>reversed</option>
+				<option>semi-sorted</option>
+			</select>
+			<select id="length" class="selectpicker">
+				<option>50</option>
+				<option>100</option>
+				<option>200</option>
+				<option selected>400</option>
+				<option>1000</option>
+			</select>
+			<button class="btn btn-primary" style="margin-bottom: 10px;" id="go">sort</button>
+		</div>
+		<canvas id="canvas" height="500" width="1000"></canvas>
 	</div>
-	<div>
-		<select id="sort-type">
-			<option>bubble</option>
-			<option>insertion</option>
-			<option selected>merge</option>
-			<option>quick (stupid)</option>
-			<option>quick (smarter)</option>
-		</select>
-		<select id="data-type">
-			<option selected>random</option>
-			<option>sorted</option>
-			<option>reversed</option>
-			<option>semi-sorted</option>
-		</select>
-		<select id="length">
-			<option>50</option>
-			<option>100</option>
-			<option>200</option>
-			<option selected>400</option>
-			<option>1000</option>
-		</select>
-		<button id="go">sort</button>
-	</div>
-	<canvas id="canvas" height="500" width="1000"></canvas>
 	<script src="http://code.jquery.com/jquery-2.0.2.js"></script>
 	<script src="js/sorts.js"></script>
 	<script src="js/array-visualizer.js"></script>
 	<script src="js/data-generation.js"></script>
+	<script src="bootstrap-select/bootstrap-select.js"></script>
+	<script src="bootstrap/js/dropdown.js"></script>
 	<script>
 		function collectSettings(){
 			var sort, data;
-			var sortType = $('#sort-type option:selected').text();
-			var dataType = $('#data-type option:selected').text();
-			var length = parseInt($('#length option:selected').text());
+			var sortType = $('#sort-type').selectpicker('val');
+			var dataType = $('#data-type').selectpicker('val');
+			var length = parseInt($('#length').selectpicker('val'));
 			if (sortType == 'bubble') {
 				sort = bubbleSort;
 			}else if (sortType == 'insertion'){
@@ -76,6 +94,8 @@
 		var visual = new ArrayVisualizer(document.getElementById('canvas'));
 		var sorter;
 		$(function(){
+			$('.selectpicker').selectpicker();
+		
 			$('#sort-type, #data-type, #length').on('change', function(){
 				visual.clear();
 				collectSettings();
