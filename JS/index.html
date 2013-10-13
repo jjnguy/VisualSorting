@@ -15,7 +15,7 @@
 				The following are some interesting scenarios to look at:
 				<ul>
 					<li>
-						<span>Quick Sort with a naïve pivot selection algorithm performs poorly on <a id="qsort-stupid-sorted">sorted</a> or semi-sorted or reverse-sorted data. 
+						<span>Quick Sort with a naïve pivot selection algorithm performs poorly on <a onclick="forceSetup('quick (stupid)', 'sorted', 200)">sorted</a> or semi-sorted or reverse-sorted data. 
 						(Versus a smarter partition: sorted, semi-sorted, reverse-sorted)</span>
 					</li>
 					<li>
@@ -64,6 +64,26 @@
 			var sortType = $('#sort-type').selectpicker('val');
 			var dataType = $('#data-type').selectpicker('val');
 			var length = parseInt($('#length').selectpicker('val'));
+
+			setup(sortType, dataType, length);
+		}
+		
+		function dataTypeToData(dataType ,length){
+			var data;
+			if (dataType == 'random') {
+				data = dataGen.random(length, length);
+			} else if (dataType == 'sorted') {
+				data = dataGen.sorted(length);
+			} else if (dataType == 'reversed') {
+				data = dataGen.reversed(length);
+			} else if (dataType == 'semi-sorted'){
+				data = dataGen.almostSortedClose(length, length / 5, 20);
+			}
+			return data;
+		}
+		
+		function sortTypeToSort(sortType){
+			var sort;
 			if (sortType == 'bubble') {
 				sort = bubbleSort;
 			}else if (sortType == 'insertion'){
@@ -75,22 +95,28 @@
 			} else if (sortType == 'quick (smarter)') {
 				sort = qSorter.sortSmart;
 			}
-			if (dataType == 'random') {
-				data = dataGen.random(length, length);
-			} else if (dataType == 'sorted') {
-				data = dataGen.sorted(length);
-			} else if (dataType == 'reversed') {
-				data = dataGen.reversed(length);
-			} else if (dataType == 'semi-sorted'){
-				data = dataGen.almostSortedClose(length, length / 5, 20);
-			}
-			
+			return sort;
+		}
+		
+		function setupWithData(sort, data){
 			sorter = new Sorter(data, sort);
 			
 			sorter.addProgressCallback(function(data){
 				visual.addFrame(data);
 			});
 			visual.addFrame({arr: data, indexes:[]});
+		}
+		
+		function forceSetup(sortType, dataType, length){
+			$('#sort-type').selectpicker('val', sortType);
+			$('#data-type').selectpicker('val', dataType);
+			$('#length').selectpicker('val', length);
+		}
+		
+		function setup(sortType, dataType, length){
+			sort = sortTypeToSort(sortType);
+			data = dataTypeToData(dataType, length);
+			setupWithData(sort, data);
 		}
 	
 		var dataGen = new DataGenerator();
