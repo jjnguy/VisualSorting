@@ -4,25 +4,36 @@
 	<title>Array Sorting Visualizer in Javascript</title>
 	<link rel="stylesheet" type="text/css" href="bootstrap/less/bootstrap.css" />
 	<link rel="stylesheet" type="text/css" href="bootstrap-select/bootstrap-select.css" />
+	<style>
+		.shortcut {
+			cursor: pointer;
+		}
+	</style>
 </head>
 <body>
 	<div class="container">
 		<h1>Javascript Array Sorting Visualizer</h1>
 		<div>
 			<p>This small page is meant to showcase various popular sorting algorithms and how they perform on different data sets.</p>
-			<p>Simply choose your various options, and click go. You can watch the algorithm work on the data.</p>
+			<p>Simply choose your various options, and click 'sort'. You can watch the algorithm work on the data.</p>
 			<p>
 				The following are some interesting scenarios to look at:
 				<ul>
 					<li>
-						<span>Quick Sort with a naïve pivot selection algorithm performs poorly on <a onclick="forceSetup('quick (stupid)', 'sorted', 200)">sorted</a> or semi-sorted or reverse-sorted data. 
-						(Versus a smarter partition: sorted, semi-sorted, reverse-sorted)</span>
+						<span>Quick Sort with a naïve pivot selection algorithm performs poorly on <a class="shortcut" onclick="forceSetup('quick (stupid)', 'sorted', 200)">sorted</a> or 
+						<a class="shortcut" onclick="forceSetup('quick (stupid)', 'semi-sorted', 200)">semi-sorted</a> or 
+						<a class="shortcut" onclick="forceSetup('quick (stupid)', 'reversed', 200)">reverse-sorted</a> data. 
+						(Versus a smarter partition quick sort: <a class="shortcut" onclick="forceSetup('quick (smarter)', 'sorted', 200)">sorted</a>, 
+						<a class="shortcut" onclick="forceSetup('quick (smarter)', 'semi-sorted', 200)">semi-sorted</a>, 
+						<a class="shortcut" onclick="forceSetup('quick (smarter)', 'reversed', 200)">reverse-sorted</a>)</span>
 					</li>
 					<li>
-						<span>Insertion Sort performs well on semi-sorted data. (Versus: Quick sort, or Merge Sort)</span>
+						<span>Insertion Sort performs well on <a class="shortcut" onclick="forceSetup('insertion', 'semi-sorted', 200)">semi-sorted</a> data. 
+						(Versus: <a class="shortcut" onclick="forceSetup('quick (smarter)', 'semi-sorted', 200)">Quick sort</a>, or 
+						<a class="shortcut" onclick="forceSetup('merge', 'semi-sorted', 200)">Merge sort</a>)</span>
 					</li>
 					<li>
-						<span>Bubble Sort is just slow in general. It's a good thing we have other sort methods.</span>
+						<span><a class="shortcut" onclick="forceSetup('bubble', 'semi-sorted', 200)">Bubble Sort is just slow in general</a>. It's a good thing we have other sort methods.</span>
 					</li>
 				</ul>
 			</p>
@@ -44,13 +55,16 @@
 			<select id="length" class="selectpicker">
 				<option>50</option>
 				<option>100</option>
-				<option>200</option>
-				<option selected>400</option>
+				<option selected>200</option>
+				<option>400</option>
 				<option>1000</option>
 			</select>
 			<button class="btn btn-primary" style="margin-bottom: 10px;" id="go">sort</button>
 		</div>
 		<canvas id="canvas" height="500" width="1000"></canvas>
+		<div>
+			<p>feedback welcome - <a href="https://github.com/jjnguy/VisualSorting" target="_blank">GitHub</a></p> or <a href="https://twitter.com/jjnguy">@jjnguy on Twitter</a>
+		</div>
 	</div>
 	<script src="http://code.jquery.com/jquery-2.0.2.js"></script>
 	<script src="js/sorts.js"></script>
@@ -111,6 +125,8 @@
 			$('#sort-type').selectpicker('val', sortType);
 			$('#data-type').selectpicker('val', dataType);
 			$('#length').selectpicker('val', length);
+			
+			sorter.sort();
 		}
 		
 		function setup(sortType, dataType, length){
