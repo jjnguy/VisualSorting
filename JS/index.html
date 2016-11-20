@@ -23,16 +23,16 @@
 				The following are some interesting scenarios to look at:
 				<ul>
 					<li>
-						<span>Quick Sort with a naïve pivot selection algorithm performs poorly on <a class="shortcut" onclick="forceSetup('quick (stupid)', 'sorted', 200)">sorted</a> or 
-						<a class="shortcut" onclick="forceSetup('quick (stupid)', 'semi-sorted', 200)">semi-sorted</a> or 
-						<a class="shortcut" onclick="forceSetup('quick (stupid)', 'reversed', 200)">reverse-sorted</a> data. 
-						(Versus a smarter partition quick sort: <a class="shortcut" onclick="forceSetup('quick (smarter)', 'sorted', 200)">sorted</a>, 
-						<a class="shortcut" onclick="forceSetup('quick (smarter)', 'semi-sorted', 200)">semi-sorted</a>, 
+						<span>Quick Sort with a naïve pivot selection algorithm performs poorly on <a class="shortcut" onclick="forceSetup('quick (stupid)', 'sorted', 200)">sorted</a> or
+						<a class="shortcut" onclick="forceSetup('quick (stupid)', 'semi-sorted', 200)">semi-sorted</a> or
+						<a class="shortcut" onclick="forceSetup('quick (stupid)', 'reversed', 200)">reverse-sorted</a> data.
+						(Versus a smarter partition quick sort: <a class="shortcut" onclick="forceSetup('quick (smarter)', 'sorted', 200)">sorted</a>,
+						<a class="shortcut" onclick="forceSetup('quick (smarter)', 'semi-sorted', 200)">semi-sorted</a>,
 						<a class="shortcut" onclick="forceSetup('quick (smarter)', 'reversed', 200)">reverse-sorted</a>)</span>
 					</li>
 					<li>
-						<span>Insertion Sort performs well on <a class="shortcut" onclick="forceSetup('insertion', 'semi-sorted', 200)">semi-sorted</a> data. 
-						(Versus: <a class="shortcut" onclick="forceSetup('quick (smarter)', 'semi-sorted', 200)">Quick sort</a>, or 
+						<span>Insertion Sort performs well on <a class="shortcut" onclick="forceSetup('insertion', 'semi-sorted', 200)">semi-sorted</a> data.
+						(Versus: <a class="shortcut" onclick="forceSetup('quick (smarter)', 'semi-sorted', 200)">Quick sort</a>, or
 						<a class="shortcut" onclick="forceSetup('merge', 'semi-sorted', 200)">Merge sort</a>)</span>
 					</li>
 					<li>
@@ -67,7 +67,7 @@
 		<canvas id="canvas" height="500" width="1000"></canvas>
 		<div>
 			<p>feedback welcome - <a href="https://github.com/jjnguy/VisualSorting" target="_blank">GitHub</a> or <a href="https://twitter.com/jjnguy">@jjnguy on Twitter</a></p>
-			<p>Some animation ideas taken from: <a href="http://joshuakehn.com/blog/static/sort.html">this site.</a></p>
+			<p>Some animation ideas taken from: <a href="http://joshuakehn.com/blog/static/sort.html" target="_blank">this site.</a></p>
 		</div>
 	</div>
 	<script src="js/jquery-2.0.3.min.js"></script>
@@ -85,7 +85,7 @@
 
 			setup(sortType, dataType, length);
 		}
-		
+
 		function dataTypeToData(dataType ,length){
 			var data;
 			if (dataType == 'random') {
@@ -99,7 +99,7 @@
 			}
 			return data;
 		}
-		
+
 		function sortTypeToSort(sortType){
 			var sort;
 			if (sortType == 'bubble') {
@@ -115,52 +115,52 @@
 			}
 			return sort;
 		}
-		
+
 		function setupWithData(sort, data){
 			sorter = new Sorter(data, sort);
-			
+
 			sorter.addProgressCallback(function(data){
 				visual.addFrame(data);
 			});
 			visual.addFrame({arr: data, indexes:[]});
 		}
-		
+
 		function forceSetup(sortType, dataType, length){
 			$('#sort-type').selectpicker('val', sortType);
 			$('#data-type').selectpicker('val', dataType);
 			$('#length').selectpicker('val', length);
-			
+
 			sorter.sort();
 		}
-		
+
 		function setup(sortType, dataType, length){
 			sort = sortTypeToSort(sortType);
 			data = dataTypeToData(dataType, length);
 			setupWithData(sort, data);
 		}
-	
+
 		var dataGen = new DataGenerator();
 		var visual = new ArrayVisualizer(document.getElementById('canvas'));
 		var sorter;
 		$(function(){
 			$('.selectpicker').selectpicker();
-		
+
 			$('#sort-type, #data-type, #length').on('change', function(){
 				visual.clear();
 				collectSettings();
 			});
-			
+
 			$('#go').on('click', function(){
 				visual.clear();
-				//if (!sorter){ 
+				//if (!sorter){
 					collectSettings();
 				//}
 				sorter.sort();
 			});
-			
+
 			collectSettings();
 		});
-		
+
 	</script>
 </body>
 </html>
